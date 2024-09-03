@@ -54,12 +54,15 @@ jobs:
 
       - name: Run integration tests
         run: |
-          until curl -s -f http://localhost:80; do
-            echo "Waiting for container to start..."
-            sleep 1 
-          done
-          if [ $? -ne 0 ]; then
-            echo "Integration tests failed. Rolling back to previous version."
-            aws ecs update-service --cluster Cluster123 --service react-app-service --desired-count 0
-            aws ecs update-service --cluster Cluster123 --service react-app-service --desired-count 1 --task-definition react-app-task-definition:1
-          fi
+          curl -X GET http://Cluster123.us-west-2.elb.amazonaws.com
+
+      - name: Rollback on failure
+        if: failure()
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          task-definition: ${{ steps.task-def.outputs.task-definition }}
+          container-name: react-app
+          container-port: 80
+          cluster: Cluster123
+          service: react-app-service
+          rollback: true
