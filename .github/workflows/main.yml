@@ -56,7 +56,7 @@ jobs:
         run: |
           until curl -s -f http://localhost:80; do
             echo "Waiting for container to start..."
-            sleep 1
+            sleep 1 
           done
           if [ $? -ne 0 ]; then
             echo "Integration tests failed. Rolling back to previous version."
