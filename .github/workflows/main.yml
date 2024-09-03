@@ -42,11 +42,21 @@ jobs:
         with:
           task-definition: react-app-task-definition.json 
           container-name: react-app
-          image: ${{ steps.build-image.outputs.image }}    
+          image: ${{ steps.build-image.outputs.image }}   
+          
       - name: Deploy Amazon ECS task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
           task-definition: ${{ steps.task-def.outputs.task-definition }}
           service: react-app-service
           cluster: Cluster123
-          wait-for-service-stability: true    
+          wait-for-service-stability: true 
+
+      - name: Run integration tests
+        run: |
+          curl -X GET http://localhost:80
+          if [ $? -ne 0 ]; then
+            echo "Integration tests failed. Rolling back to previous version."
+            aws ecs update-service --cluster Cluster123 --service react-app-service --desired-count 0
+            aws ecs update-service --cluster Cluster123 --service react-app-service --desired-count 1 --task-definition react-app-task-definition:1
+          fi
