@@ -54,7 +54,7 @@ jobs:
 
       - name: Run integration tests
         run: |
-          curl -f -s -o /dev/null https://${ECS_SERVICE}.execute-api.${AWS_REGION}.amazonaws.com
+          curl -f -s -o /dev/null https://react-app-service.execute-api.${AWS_REGION}.amazonaws.com
           if [ $? -ne 0 ]; then
             echo "Integration tests failed"
             exit 1
