@@ -53,11 +53,14 @@ jobs:
           wait-for-service-stability: true 
 
       - name: Run integration tests
-        uses: cypress-io/github-action@v2
-        with:
-          command: run
-          working-directory: cypress
-          browser: chrome
+        run: |
+          # Install dependencies
+          npm install
+          # Run integration tests using Cypress
+          npm run cypress:run
+          # Output the test results
+          echo "Test results: $?"
+       
           
       - name: Rollback on failure
         if: failure()
