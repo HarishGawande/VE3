@@ -52,12 +52,12 @@ jobs:
           cluster: Cluster123
           wait-for-service-stability: true 
 
-      - name: Run integration tests
-        env:
-          TASK_ID: ${{ steps.deploy.outputs.task-id }}
+      - name: Run integration test
+          TASK_ID=$(aws ecs list-tasks --cluster Cluster123 --query 'taskArns[0]' --output text)
         run: |
           aws ecs execute-command --cluster Cluster123 --task ${TASK_ID} --container react-app --command "curl -X GET http://localhost:80"
-        
+
+
       - name: Rollback on failure
         if: failure()
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
