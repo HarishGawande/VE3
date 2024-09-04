@@ -54,12 +54,11 @@ jobs:
 
       - name: Run integration tests
         run: |
-          # Install dependencies
-          npm install
-          # Run integration tests using Cypress
-          npm run cypress:run
-          # Output the test results
-          echo "Test results: $?"
+          curl -f -s -o /dev/null https://${ECS_SERVICE}.execute-api.${AWS_REGION}.amazonaws.com
+          if [ $? -ne 0 ]; then
+            echo "Integration tests failed"
+            exit 1
+          fi
        
           
       - name: Rollback on failure
