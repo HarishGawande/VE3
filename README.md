@@ -1,4 +1,4 @@
-Implement a CI/CD Pipeline with GitHub Actions for Automated Deployment and Rollback
+**Implement a CI/CD Pipeline with GitHub Actions for Automated Deployment and Rollback**
 
 Overview:
   This repository demonstrates a CI/CD pipeline using GitHub Actions to automate the deployment of a simple web application to AWS ECS (Elastic Container Service). The     pipeline includes deployment, integration tests, and rollback functionality.
@@ -38,7 +38,7 @@ Steps:
   
   6) Goto GitHub Repo, then Actions.
   
-  7) Make changes in .github/ accordingly.
+  7) Make changes in .github/workflows/main.yml accordingly.
   
   8) Edit region, repository, cluster, service,
 
@@ -48,6 +48,39 @@ Steps:
 
     Note: Make sure port 80 is open in security_group.
 
+
+**GitHub Actions Workflow**
+
+The GitHub Actions workflow is defined in the .github/workflows/main.yml file. 
+The workflow consists of five jobs:
+
+  *Checkout:* 
+    Checkout the code from the GitHub repository.
+  
+  *Build-and-push:*
+    Build and push the Docker image to ECR.
+    
+  *Login:*
+    Login in AWS_ECR with user credentials.
+
+  *Build & tag:*
+    Docker build image with special tag to push on AWS_ECR.
+
+  *Task_def:*
+    Update Task definition with latest Docker Image.
+    
+  *Deploy:*
+    Deploy the Docker image to ECS.
+  
+  *Integration-tests:*
+    Perform integration tests on the deployed application.
+  
+  *Rollback:*
+    Rollback the deployment if the integration tests fail.
+
+
+
+    The End !
 
 
 
